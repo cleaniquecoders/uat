@@ -4,13 +4,14 @@ declare(strict_types=1);
 
 namespace CleaniqueCoders\Uat\Services;
 
+use CleaniqueCoders\Uat\Contracts\Rule;
 use Illuminate\Routing\Route;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Str;
 use ReflectionClass;
 use ReflectionMethod;
 
-class RuleDiscovery
+class RuleDiscovery implements Rule
 {
     /**
      * Discover middleware rules by analyzing actual middleware classes

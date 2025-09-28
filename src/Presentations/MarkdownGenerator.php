@@ -4,9 +4,10 @@ declare(strict_types=1);
 
 namespace CleaniqueCoders\Uat\Presentations;
 
+use CleaniqueCoders\Uat\Contracts\Presentation;
 use Illuminate\Support\Collection;
 
-class MarkdownGenerator
+class MarkdownGenerator implements Presentation
 {
     public function generateProjectInfo(array $projectInfo): string
     {

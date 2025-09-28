@@ -4,8 +4,6 @@ declare(strict_types=1);
 
 namespace CleaniqueCoders\Uat\Actions;
 
-use CleaniqueCoders\Uat\Presentations\MarkdownGenerator;
-use CleaniqueCoders\Uat\Services\DataService;
 use Illuminate\Support\Facades\File;
 use Lorisleiva\Actions\Action;
 
@@ -13,11 +11,11 @@ class GenerateUatScript extends Action
 {
     public function handle(?string $outputDir = null): array
     {
-        $uatDataService = app(DataService::class);
-        $markdownGenerator = app(MarkdownGenerator::class);
+        $dataService = config('uat.dataservice');
+        $markdownGenerator = config('uat.presentation');
 
         // get project information
-        $projectInfo = $uatDataService->getProjectInformation();
+        $projectInfo = $dataService->getProjectInformation();
 
         // create docs/uat/{date} directory
         $date = now()->format('Y-m-d');
@@ -42,14 +40,14 @@ class GenerateUatScript extends Action
         $generatedFiles[] = $projectInfoFile;
 
         // users
-        $users = $uatDataService->getUsers();
+        $users = $dataService->getUsers();
         $usersContent = $markdownGenerator->generateUsers($users);
         $usersFile = "{$uatDirectory}/02-users.md";
         File::put($usersFile, $usersContent);
         $generatedFiles[] = $usersFile;
 
         // available modules (this should be group / find from routes (exclude vendor, only GET method))
-        $modules = $uatDataService->getAvailableModules();
+        $modules = $dataService->getAvailableModules();
         $modulesOverviewContent = $markdownGenerator->generateAvailableModules($modules);
         $modulesOverviewFile = "{$uatDirectory}/03-available-modules.md";
         File::put($modulesOverviewFile, $modulesOverviewContent);

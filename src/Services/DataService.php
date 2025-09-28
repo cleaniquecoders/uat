@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace CleaniqueCoders\Uat\Services;
 
+use CleaniqueCoders\Uat\Contracts\Rule;
 use Illuminate\Foundation\Auth\User;
 use Illuminate\Routing\Route;
 use Illuminate\Support\Collection;
@@ -12,14 +13,14 @@ use Illuminate\Support\Facades\Route as RouteFacade;
 
 class DataService
 {
-    private ?RuleDiscovery $discoveryService = null;
+    private ?Rule $ruleDiscoveryService = null;
 
     public function __construct()
     {
         try {
-            $this->discoveryService = app(RuleDiscovery::class);
+            $this->ruleDiscoveryService = config('uat.services.rule');
         } catch (\Exception $e) {
-            $this->discoveryService = null;
+            $this->ruleDiscoveryService = null;
         }
     }
 
@@ -68,7 +69,7 @@ class DataService
                 // Only GET method routes for UAT testing
                 return in_array('GET', $route->methods()) &&
                        // Exclude vendor routes (API routes, telescope, horizon, etc.)
-                       ! $this->isVendorRoute($route) &&
+                       ! $this->isExcludedRoute($route) &&
                        // Exclude routes with parameters for simplicity in UAT
                        ! str_contains($route->uri(), '{') &&
                        // Only include web routes (exclude API for now)
@@ -104,10 +105,10 @@ class DataService
         $prerequisites = [];
 
         // Use discovery service for dynamic rule discovery if available
-        if ($this->discoveryService) {
+        if ($this->ruleDiscoveryService) {
             try {
-                $prerequisites = array_merge($prerequisites, $this->discoveryService->discoverMiddlewareRules($middleware));
-                $prerequisites = array_merge($prerequisites, $this->discoveryService->discoverPolicyRules($route));
+                $prerequisites = array_merge($prerequisites, $this->ruleDiscoveryService->discoverMiddlewareRules($middleware));
+                $prerequisites = array_merge($prerequisites, $this->ruleDiscoveryService->discoverPolicyRules($route));
             } catch (\Exception $e) {
                 // Discovery failed, will use fallback
                 Log::warning('Dynamic rule discovery failed: '.$e->getMessage());
@@ -126,8 +127,8 @@ class DataService
     public function getMiddlewarePrerequisites(array $middleware): array
     {
         $prerequisites = [];
-        $middlewareRules = config('uat-rules.middleware_rules', []);
-        $patternRules = config('uat-rules.pattern_rules', []);
+        $middlewareRules = config('uat.rules.middleware', []);
+        $patternRules = config('uat.rules.pattern', []);
 
         foreach ($middleware as $middlewareName) {
             // Check for exact middleware match
@@ -207,12 +208,12 @@ class DataService
 
     private function getPolicyMappings(): array
     {
-        return config('uat-rules.policy_mappings', []);
+        return config('uat.policy_mappings', []);
     }
 
     private function determinePolicyMethod(string $controllerMethod, ?string $routeName): string
     {
-        $methodMap = config('uat-rules.method_mapping', []);
+        $methodMap = config('uat.methods_mapping', []);
 
         // Check if we have a direct mapping
         if (isset($methodMap[$controllerMethod])) {
@@ -223,25 +224,11 @@ class DataService
         return $controllerMethod;
     }
 
-    private function isVendorRoute(Route $route): bool
+    private function isExcludedRoute(Route $route): bool
     {
-        $vendorPrefixes = [
-            'telescope',
-            'horizon',
-            'sanctum',
-            'api/',
-            '_ignition',
-            'livewire',
-            '_debugbar',
-            'rappasoft',
-            'impersonate',
-            'doc',
-            'errors',
-            'up',
-            'test',
-        ];
+        $excludedPrefixes = config('uat.excluded_prefixes', []);
 
-        foreach ($vendorPrefixes as $prefix) {
+        foreach ($excludedPrefixes as $prefix) {
             if (str_starts_with($route->uri(), $prefix)) {
                 return true;
             }
