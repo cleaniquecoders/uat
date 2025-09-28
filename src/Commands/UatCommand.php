@@ -1,12 +1,12 @@
 <?php
 
-namespace VendorName\Skeleton\Commands;
+namespace CleaniqueCoders\Uat\Commands;
 
 use Illuminate\Console\Command;
 
-class SkeletonCommand extends Command
+class UatCommand extends Command
 {
-    public $signature = 'skeleton';
+    public $signature = 'uat';
 
     public $description = 'My command';
 
