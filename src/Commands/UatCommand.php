@@ -10,7 +10,7 @@ class UatCommand extends Command
 {
     public $signature = 'uat:generate
         {--output-dir= : Output directory for UAT files}
-        {--format=markdown : Output format. See config/uat.php for available presentation outpu';
+        {--format=markdown : Output format. See config/uat.php for available presentation outputs}';
 
     public $description = 'Generate UAT Scripts';
 
@@ -42,10 +42,10 @@ class UatCommand extends Command
 
             return self::SUCCESS;
         } catch (\Throwable $th) {
-            $this->error("❌ Failed to generate UAT scripts: {$e->getMessage()}");
+            $this->error("❌ Failed to generate UAT scripts: {$th->getMessage()}");
 
             if ($this->option('verbose')) {
-                $this->error($e->getTraceAsString());
+                $this->error($th->getTraceAsString());
             }
 
             return self::FAILURE;

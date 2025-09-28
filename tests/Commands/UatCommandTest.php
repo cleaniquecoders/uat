@@ -5,7 +5,7 @@ declare(strict_types=1);
 use CleaniqueCoders\Uat\Actions\GenerateUatScript;
 use CleaniqueCoders\Uat\Commands\UatCommand;
 use Illuminate\Support\Facades\Config;
-use Lorisleiva\Actions\Facades\Actions;
+use Mockery;
 
 beforeEach(function () {
     $this->command = new UatCommand;
@@ -27,19 +27,18 @@ it('has correct description', function () {
 
 it('executes successfully with default options', function () {
     // Mock the action
-    Actions::mock(GenerateUatScript::class, function ($mock) {
-        $mock->shouldReceive('run')
-            ->once()
-            ->with(null, 'markdown')
-            ->andReturn([
-                'directory' => '/test/directory',
-                'generated_files' => [
-                    '01-project-info.md',
-                    '02-users.md',
-                ],
-                'date' => '2023-01-01',
-            ]);
-    });
+    $mock = Mockery::mock('overload:'.GenerateUatScript::class);
+    $mock->shouldReceive('run')
+        ->once()
+        ->with(null, 'markdown')
+        ->andReturn([
+            'directory' => '/test/directory',
+            'generated_files' => [
+                '01-project-info.md',
+                '02-users.md',
+            ],
+            'date' => '2023-01-01',
+        ]);
 
     Config::set('uat.formats', ['markdown', 'json']);
 
@@ -56,16 +55,15 @@ it('executes successfully with default options', function () {
 });
 
 it('executes successfully with custom output directory', function () {
-    Actions::mock(GenerateUatScript::class, function ($mock) {
-        $mock->shouldReceive('run')
-            ->once()
-            ->with('/custom/output', 'markdown')
-            ->andReturn([
-                'directory' => '/custom/output',
-                'generated_files' => ['test.md'],
-                'date' => '2023-01-01',
-            ]);
-    });
+    $mock = Mockery::mock('overload:'.GenerateUatScript::class);
+    $mock->shouldReceive('run')
+        ->once()
+        ->with('/custom/output', 'markdown')
+        ->andReturn([
+            'directory' => '/custom/output',
+            'generated_files' => ['test.md'],
+            'date' => '2023-01-01',
+        ]);
 
     Config::set('uat.formats', ['markdown', 'json']);
 
@@ -74,16 +72,15 @@ it('executes successfully with custom output directory', function () {
 });
 
 it('executes successfully with custom format', function () {
-    Actions::mock(GenerateUatScript::class, function ($mock) {
-        $mock->shouldReceive('run')
-            ->once()
-            ->with(null, 'json')
-            ->andReturn([
-                'directory' => '/test/directory',
-                'generated_files' => ['test.json'],
-                'date' => '2023-01-01',
-            ]);
-    });
+    $mock = Mockery::mock('overload:'.GenerateUatScript::class);
+    $mock->shouldReceive('run')
+        ->once()
+        ->with(null, 'json')
+        ->andReturn([
+            'directory' => '/test/directory',
+            'generated_files' => ['test.json'],
+            'date' => '2023-01-01',
+        ]);
 
     Config::set('uat.formats', ['markdown', 'json']);
 
@@ -100,11 +97,10 @@ it('fails with invalid format', function () {
 });
 
 it('fails when action throws exception', function () {
-    Actions::mock(GenerateUatScript::class, function ($mock) {
-        $mock->shouldReceive('run')
-            ->once()
-            ->andThrow(new Exception('Test exception'));
-    });
+    $mock = Mockery::mock('overload:'.GenerateUatScript::class);
+    $mock->shouldReceive('run')
+        ->once()
+        ->andThrow(new Exception('Test exception'));
 
     Config::set('uat.formats', ['markdown', 'json']);
 
@@ -116,22 +112,21 @@ it('fails when action throws exception', function () {
 it('handles formats config being null', function () {
     Config::set('uat.formats', null);
 
-    $this->artisan('uat:generate --format=markdown')
+    $this->artisan('uat:generate --format=html')
         ->expectsOutput('❌ Failed to generate UAT scripts: Invalid format. Only markdown, json are accepted')
         ->assertExitCode(1);
 });
 
 it('handles both custom output directory and format', function () {
-    Actions::mock(GenerateUatScript::class, function ($mock) {
-        $mock->shouldReceive('run')
-            ->once()
-            ->with('/custom/path', 'json')
-            ->andReturn([
-                'directory' => '/custom/path',
-                'generated_files' => ['test.json'],
-                'date' => '2023-01-01',
-            ]);
-    });
+    $mock = Mockery::mock('overload:'.GenerateUatScript::class);
+    $mock->shouldReceive('run')
+        ->once()
+        ->with('/custom/path', 'json')
+        ->andReturn([
+            'directory' => '/custom/path',
+            'generated_files' => ['test.json'],
+            'date' => '2023-01-01',
+        ]);
 
     Config::set('uat.formats', ['markdown', 'json']);
 
