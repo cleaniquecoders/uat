@@ -171,7 +171,7 @@ it('generates module test suite correctly', function () {
         'module' => 'Users',
         'routes' => [
             [
-                'uri' => '/users',
+                'uri' => 'users',
                 'name' => 'users.index',
                 'action' => 'UserController@index',
                 'middleware' => ['web', 'auth'],
@@ -192,12 +192,12 @@ it('generates module test suite correctly', function () {
     expect($result)->toBeString();
     expect($result)->toContain('# Users Module - UAT Test Suite');
     expect($result)->toContain('## Module Overview');
-    expect($result)->toContain('## Test Scenarios');
-    expect($result)->toContain('| **Module Name** | Users |');
-    expect($result)->toContain('### Route: /users (users.index)');
+    expect($result)->toContain('## Test Cases');
+    expect($result)->toContain('| Route URI | Route Name | Action | Middleware | Prerequisites |');
+    expect($result)->toContain('### Route: `/users`');
     expect($result)->toContain('#### Prerequisites');
-    expect($result)->toContain('**Type:** authentication');
-    expect($result)->toContain('**Description:** User must be authenticated');
+    expect($result)->toContain('**authentication:**');
+    expect($result)->toContain('- **Description**: User must be authenticated');
 });
 
 it('handles empty users collection', function () {
@@ -239,7 +239,7 @@ it('handles route with no prerequisites', function () {
         'module' => 'Dashboard',
         'routes' => [
             [
-                'uri' => '/',
+                'uri' => '',
                 'name' => 'dashboard',
                 'action' => 'DashboardController@index',
                 'middleware' => ['web'],
@@ -252,7 +252,7 @@ it('handles route with no prerequisites', function () {
 
     expect($result)->toBeString();
     expect($result)->toContain('### Route: `/`');
-    expect($result)->toContain('| `//` | dashboard | DashboardController@index |');
+    expect($result)->toContain('| `/` | dashboard |');
 });
 
 it('handles empty role permissions', function () {

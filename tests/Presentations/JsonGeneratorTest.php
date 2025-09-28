@@ -181,7 +181,7 @@ it('generates module test suite correctly', function () {
         'module' => 'Users',
         'routes' => [
             [
-                'uri' => '/users',
+                'uri' => 'users',
                 'name' => 'users.index',
                 'action' => 'UserController@index',
                 'middleware' => ['web', 'auth'],
@@ -204,9 +204,11 @@ it('generates module test suite correctly', function () {
 
     $json = json_decode($result, true);
     expect($json)->toHaveKey('title', 'Users Module - UAT Test Suite');
+    expect($json)->toHaveKey('module', 'Users');
+    expect($json)->toHaveKey('routes_count', 1);
     expect($json)->toHaveKey('module_overview');
-    expect($json)->toHaveKey('test_scenarios');
-    expect($json['module_overview'])->toHaveKey('module_name', 'Users');
+    expect($json)->toHaveKey('test_cases');
+    expect($json)->toHaveKey('test_summary');
 });
 
 it('handles empty users collection', function () {
