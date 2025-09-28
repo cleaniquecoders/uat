@@ -18,8 +18,6 @@ class UatServiceProvider extends PackageServiceProvider
         $package
             ->name('uat')
             ->hasConfigFile()
-            ->hasViews()
-            ->hasMigration('create_uat_table')
             ->hasCommand(UatCommand::class);
     }
 }
