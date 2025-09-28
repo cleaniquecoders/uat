@@ -187,6 +187,10 @@ storage/uat/2024-01-15/
 
 ## Extending the Package
 
+The concept is to extend the core features without modifying the core classes. Current status still requirement study.
+
+At the moment, you may customise the existing core services. See following sections for more details.
+
 ### Custom Data Service
 
 Implement the `Data` contract to customize data collection:
