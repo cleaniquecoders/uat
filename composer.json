@@ -1,6 +1,6 @@
 {
     "name": "cleaniquecoders/uat",
-    "description": "This is my package uat",
+    "description": "This package automatically generates comprehensive User Acceptance Testing (UAT) documentation for Laravel applications by analyzing your routes, middleware, policies, and authorization rules. It creates structured test scripts that help QA teams and stakeholders understand what needs to be tested and how to test it.",
     "keywords": [
         "Cleanique Coders",
         "laravel",
