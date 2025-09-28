@@ -9,6 +9,11 @@ use Illuminate\Support\Collection;
 
 class MarkdownGenerator implements Presentation
 {
+    public function getExtension(): string
+    {
+        return 'md';
+    }
+
     public function generateProjectInfo(array $projectInfo): string
     {
         $markdown = "# Project Information\n\n";

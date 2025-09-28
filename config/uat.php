@@ -25,7 +25,7 @@ return [
     | Can be overridden using the UAT_DOC_PATH environment variable.
     |
     */
-    'document_path' => env('UAT_DOC_PATH'),
+    'directory' => env('UAT_DIRECTORY', 'uat'),
 
     /*
     |--------------------------------------------------------------------------

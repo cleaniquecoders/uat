@@ -9,6 +9,11 @@ use Illuminate\Support\Collection;
 
 class JsonGenerator implements Presentation
 {
+    public function getExtension(): string
+    {
+        return 'json';
+    }
+
     public function generateProjectInfo(array $projectInfo): string
     {
         $output = [

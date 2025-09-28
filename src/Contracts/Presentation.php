@@ -15,4 +15,6 @@ interface Presentation
     public function generateAvailableModules(array $modules): string;
 
     public function generateModuleTestSuite(array $module, int $moduleIndex): string;
+
+    public function getExtension(): string;
 }
