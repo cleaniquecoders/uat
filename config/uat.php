@@ -44,7 +44,6 @@ return [
         'project' => ProjectAnalyzer::class,
         'data' => DataService::class,
         'rule' => RuleDiscovery::class,
-        'presentation' => MarkdownGenerator::class,
     ],
 
     /*
@@ -65,7 +64,7 @@ return [
 
     /*
     |--------------------------------------------------------------------------
-    | Documentation Generators
+    | Documentation Format Generators
     |--------------------------------------------------------------------------
     |
     | Available output format generators for UAT documentation.
@@ -74,7 +73,7 @@ return [
     | - json: Machine-readable JSON format for API consumption
     |
     */
-    'generators' => [
+    'formats' => [
         'markdown' => MarkdownGenerator::class,
         'json' => JsonGenerator::class,
     ],

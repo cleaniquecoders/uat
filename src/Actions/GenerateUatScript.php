@@ -12,7 +12,7 @@ use Lorisleiva\Actions\Action;
 
 class GenerateUatScript extends Action
 {
-    public function handle(?string $outputDir = null): array
+    public function handle(string $outputDir, string $format): array
     {
         // @see \CleaniqueCoders\Uat\Contracts\Data
         $dataService = config('uat.services.data');
@@ -21,7 +21,7 @@ class GenerateUatScript extends Action
         }
 
         // @see \CleaniqueCoders\Uat\Contracts\Presentation
-        $presentation = config('uat.services.presentation');
+        $presentation = config('uat.formats.'.$format);
         if (! $presentation instanceof Presentation) {
             throw new Exception(config('uat.services.presentation')." must implements CleaniqueCoders\Uat\Contracts\Presentation interface.");
         }

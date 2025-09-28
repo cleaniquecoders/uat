@@ -3,11 +3,14 @@
 namespace CleaniqueCoders\Uat\Commands;
 
 use CleaniqueCoders\Uat\Actions\GenerateUatScript;
+use Exception;
 use Illuminate\Console\Command;
 
 class UatCommand extends Command
 {
-    public $signature = 'uat:generate {--output-dir= : Output directory for UAT files}';
+    public $signature = 'uat:generate
+        {--output-dir= : Output directory for UAT files}
+        {--format=markdown : Output format. See config/uat.php for available presentation outpu';
 
     public $description = 'Generate UAT Scripts';
 
@@ -17,8 +20,13 @@ class UatCommand extends Command
 
         try {
             $outputDir = $this->option('output-dir');
+            $format = $this->option('format');
+            $formats = config('uat.formats') ?? ['markdown', 'json'];
 
-            $result = GenerateUatScript::run($outputDir);
+            if (! in_array($format, $formats)) {
+                throw new Exception('Invalid format. Only '.implode(', ', $formats).' are accepted');
+            }
+            $result = GenerateUatScript::run($outputDir, $format);
 
             $this->info('✅ UAT scripts generated successfully!');
             $this->info("📁 Directory: {$result['directory']}");
