@@ -118,7 +118,7 @@ class RuleDiscovery implements Rule
     private function isBuiltInMiddleware(string $middleware): bool
     {
         $builtInMiddleware = [
-            'auth', 'guest', 'verified', 'throttle', 'can', 'signed', 'password.confirm',
+            'auth', 'guest', 'verified', 'throttle', 'can', 'signed', 'password.confirm', 'role', 'permission',
         ];
 
         foreach ($builtInMiddleware as $builtin) {
@@ -157,6 +157,8 @@ class RuleDiscovery implements Rule
                 'validation' => 'Check email_verified_at is not null',
             ],
             'can' => $this->getCanMiddlewareRule($middleware),
+            'role' => $this->getRoleMiddlewareRule($middleware),
+            'permission' => $this->getPermissionMiddlewareRule($middleware),
             default => [
                 'type' => 'unknown_builtin',
                 'description' => "Built-in middleware: {$middleware}",
@@ -178,6 +180,36 @@ class RuleDiscovery implements Rule
             'description' => "User must pass '{$permission}' gate check",
             'action' => "Login with user authorized for '{$permission}'",
             'validation' => "Verify gate check passes for '{$permission}'",
+        ];
+    }
+
+    /**
+     * Handle 'role:rolename' middleware
+     */
+    private function getRoleMiddlewareRule(string $middleware): array
+    {
+        $role = str_replace('role:', '', $middleware);
+
+        return [
+            'type' => 'role_authorization',
+            'description' => "User must have '{$role}' role",
+            'action' => "Login with user assigned to '{$role}' role",
+            'validation' => "Verify user has '{$role}' role",
+        ];
+    }
+
+    /**
+     * Handle 'permission:permissionname' middleware
+     */
+    private function getPermissionMiddlewareRule(string $middleware): array
+    {
+        $permission = str_replace('permission:', '', $middleware);
+
+        return [
+            'type' => 'permission_authorization',
+            'description' => "User must have '{$permission}' permission",
+            'action' => "Login with user having '{$permission}' permission",
+            'validation' => "Verify user has '{$permission}' permission",
         ];
     }
 

@@ -9,6 +9,7 @@ use CleaniqueCoders\Uat\Contracts\Rule;
 use Illuminate\Foundation\Auth\User;
 use Illuminate\Routing\Route;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Route as RouteFacade;
 
@@ -19,7 +20,21 @@ class DataService implements Data
     public function __construct()
     {
         try {
-            $this->ruleDiscoveryService = config('uat.services.rule');
+            $ruleService = config('uat.services.rule');
+            if ($ruleService) {
+                // If it's already an object (for testing), use it directly
+                if (is_object($ruleService)) {
+                    $this->ruleDiscoveryService = $ruleService;
+                }
+                // If it's a string class name, instantiate it
+                elseif (is_string($ruleService) && class_exists($ruleService)) {
+                    $this->ruleDiscoveryService = new $ruleService;
+                } else {
+                    $this->ruleDiscoveryService = null;
+                }
+            } else {
+                $this->ruleDiscoveryService = null;
+            }
         } catch (\Exception $e) {
             $this->ruleDiscoveryService = null;
         }
@@ -27,7 +42,7 @@ class DataService implements Data
 
     public function getProjectInformation(): array
     {
-        $composer = json_decode(file_get_contents(base_path('composer.json')), true);
+        $composer = json_decode(File::get(base_path('composer.json')), true);
 
         return [
             'name' => $composer['name'] ?? 'Laravel',

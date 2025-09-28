@@ -32,10 +32,25 @@ it('analyzes project correctly', function () {
 
 it('discovers middleware patterns when directory exists', function () {
     $middlewarePath = app_path('Http/Middleware');
+    $policiesPath = app_path('Policies');
+    $authPath = app_path('Http/Controllers/Auth');
+    $controllersPath = app_path('Http/Controllers');
 
     File::shouldReceive('exists')
         ->with($middlewarePath)
         ->andReturn(true);
+
+    File::shouldReceive('exists')
+        ->with($policiesPath)
+        ->andReturn(false);
+
+    File::shouldReceive('exists')
+        ->with($authPath)
+        ->andReturn(false);
+
+    File::shouldReceive('exists')
+        ->with($controllersPath)
+        ->andReturn(false);
 
     $file1 = new SplFileInfo('/path/to/AuthMiddleware.php');
     $file2 = new SplFileInfo('/path/to/AdminMiddleware.php');

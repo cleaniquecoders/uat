@@ -14,9 +14,7 @@ use Illuminate\Support\Facades\Route as RouteFacade;
 use Mockery as m;
 
 beforeEach(function () {
-    $this->dataService = new DataService;
-
-    // Mock composer.json file
+    // Define default composer.json content
     $this->composerJson = [
         'name' => 'test/project',
         'description' => 'Test Project Description',
@@ -26,6 +24,8 @@ beforeEach(function () {
     File::shouldReceive('get')
         ->with(base_path('composer.json'))
         ->andReturn(json_encode($this->composerJson));
+
+    $this->dataService = new DataService;
 });
 
 afterEach(function () {
@@ -41,6 +41,14 @@ it('can instantiate DataService', function () {
 });
 
 it('gets project information correctly', function () {
+    File::shouldReceive('get')
+        ->with(base_path('composer.json'))
+        ->andReturn(json_encode([
+            'name' => 'test/project',
+            'description' => 'Test Project Description',
+            'version' => '1.0.0',
+        ]));
+
     $projectInfo = $this->dataService->getProjectInformation();
 
     expect($projectInfo)->toBeArray();
@@ -73,6 +81,7 @@ it('handles missing composer.json fields gracefully', function () {
 it('gets users correctly', function () {
     // Mock User model
     $mockUser = m::mock(User::class);
+    $mockUser->shouldReceive('setAttribute')->andReturnSelf();
     $mockUser->id = 1;
     $mockUser->name = 'Test User';
     $mockUser->email = 'test@example.com';
