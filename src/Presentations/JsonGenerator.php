@@ -106,29 +106,13 @@ class JsonGenerator implements Presentation
 
     public function generateUsers(Collection $users): string
     {
-        $roleDistribution = $users->flatMap(fn ($user) => $user['roles'])->countBy();
-        $uniqueRoles = $users->flatMap(fn ($user) => $user['roles'])->unique();
-
-        $testUserMatrix = [];
-        foreach ($uniqueRoles as $role) {
-            $roleUsers = $users->filter(fn ($user) => in_array($role, $user['roles']))->take(2);
-
-            $testUserMatrix[$role] = [
-                'available_users' => $roleUsers->isNotEmpty() ? $roleUsers->toArray() : [],
-                'has_users' => $roleUsers->isNotEmpty(),
-                'warning' => $roleUsers->isEmpty() ? "No users found with {$role} role - Create test users before UAT" : null,
-            ];
-        }
-
         $output = [
             'title' => 'Users',
             'generated_at' => now()->toDateTimeString(),
             'total_users' => $users->count(),
             'users_overview' => $users->toArray(),
-            'user_roles_distribution' => $roleDistribution->toArray(),
             'uat_test_users' => [
                 'description' => 'For comprehensive UAT testing, ensure you have test users for each role',
-                'recommended_test_user_matrix' => $testUserMatrix,
             ],
             'pre_uat_user_checklist' => [
                 'verified_emails' => 'All test users have verified email addresses',
