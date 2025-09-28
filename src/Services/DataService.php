@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace CleaniqueCoders\Uat\Services;
 
+use CleaniqueCoders\Uat\Contracts\Data;
 use CleaniqueCoders\Uat\Contracts\Rule;
 use Illuminate\Foundation\Auth\User;
 use Illuminate\Routing\Route;
@@ -11,7 +12,7 @@ use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Route as RouteFacade;
 
-class DataService
+class DataService implements Data
 {
     private ?Rule $ruleDiscoveryService = null;
 

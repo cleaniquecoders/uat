@@ -11,8 +11,8 @@ class GenerateUatScript extends Action
 {
     public function handle(?string $outputDir = null): array
     {
-        $dataService = config('uat.dataservice');
-        $markdownGenerator = config('uat.presentation');
+        $dataService = config('uat.services.data');
+        $markdownGenerator = config('uat.services.presentation');
 
         // get project information
         $projectInfo = $dataService->getProjectInformation();
