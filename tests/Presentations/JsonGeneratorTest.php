@@ -123,11 +123,11 @@ it('generates users correctly', function () {
     expect(json_decode($result, true))->not->toBeNull();
 
     $json = json_decode($result, true);
-    expect($json)->toHaveKey('title', 'Available Users');
-    expect($json)->toHaveKey('users');
-    expect($json['users'])->toHaveCount(2);
-    expect($json['users'][0])->toHaveKey('name', 'John Doe');
-    expect($json['users'][1])->toHaveKey('name', 'Jane Smith');
+    expect($json)->toHaveKey('title', 'Users');
+    expect($json)->toHaveKey('users_overview');
+    expect($json['users_overview'])->toHaveCount(2);
+    expect($json['users_overview'][0])->toHaveKey('name', 'John Doe');
+    expect($json['users_overview'][1])->toHaveKey('name', 'Jane Smith');
 });
 
 it('generates available modules correctly', function () {
@@ -169,11 +169,11 @@ it('generates available modules correctly', function () {
     expect(json_decode($result, true))->not->toBeNull();
 
     $json = json_decode($result, true);
-    expect($json)->toHaveKey('title', 'Available Modules');
-    expect($json)->toHaveKey('modules');
-    expect($json['modules'])->toHaveCount(2);
-    expect($json['modules'][0])->toHaveKey('module_name', 'Dashboard');
-    expect($json['modules'][1])->toHaveKey('module_name', 'Users');
+    expect($json)->toHaveKey('title', 'Available Modules Overview');
+    expect($json)->toHaveKey('modules_summary');
+    expect($json['modules_summary'])->toHaveCount(2);
+    expect($json['modules_summary'][0])->toHaveKey('module', 'Dashboard');
+    expect($json['modules_summary'][1])->toHaveKey('module', 'Users');
 });
 
 it('generates module test suite correctly', function () {
@@ -203,7 +203,7 @@ it('generates module test suite correctly', function () {
     expect(json_decode($result, true))->not->toBeNull();
 
     $json = json_decode($result, true);
-    expect($json)->toHaveKey('title', 'Users Module - Test Suite');
+    expect($json)->toHaveKey('title', 'Users Module - UAT Test Suite');
     expect($json)->toHaveKey('module_overview');
     expect($json)->toHaveKey('test_scenarios');
     expect($json['module_overview'])->toHaveKey('module_name', 'Users');
@@ -218,9 +218,9 @@ it('handles empty users collection', function () {
     expect(json_decode($result, true))->not->toBeNull();
 
     $json = json_decode($result, true);
-    expect($json)->toHaveKey('users');
-    expect($json['users'])->toBeArray();
-    expect($json['users'])->toBeEmpty();
+    expect($json)->toHaveKey('users_overview');
+    expect($json['users_overview'])->toBeArray();
+    expect($json['users_overview'])->toBeEmpty();
 });
 
 it('handles empty modules array', function () {
@@ -232,9 +232,9 @@ it('handles empty modules array', function () {
     expect(json_decode($result, true))->not->toBeNull();
 
     $json = json_decode($result, true);
-    expect($json)->toHaveKey('modules');
-    expect($json['modules'])->toBeArray();
-    expect($json['modules'])->toBeEmpty();
+    expect($json)->toHaveKey('modules_summary');
+    expect($json['modules_summary'])->toBeArray();
+    expect($json['modules_summary'])->toBeEmpty();
 });
 
 it('formats JSON with proper formatting', function () {

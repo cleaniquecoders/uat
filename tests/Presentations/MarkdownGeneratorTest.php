@@ -98,6 +98,7 @@ it('generates users correctly', function () {
             'name' => 'John Doe',
             'email' => 'john@example.com',
             'email_verified' => true,
+            'roles' => ['admin', 'user'],
             'created_at' => '2023-01-01 12:00:00',
         ],
         [
@@ -105,6 +106,7 @@ it('generates users correctly', function () {
             'name' => 'Jane Smith',
             'email' => 'jane@example.com',
             'email_verified' => false,
+            'roles' => ['user'],
             'created_at' => '2023-01-02 12:00:00',
         ],
     ]);
@@ -112,12 +114,12 @@ it('generates users correctly', function () {
     $result = $this->generator->generateUsers($users);
 
     expect($result)->toBeString();
-    expect($result)->toContain('# Available Users');
+    expect($result)->toContain('# Users');
     expect($result)->toContain('## Users Overview');
-    expect($result)->toContain('| User ID | Name | Email | Email Verified | Created At |');
-    expect($result)->toContain('| 1 | **John Doe** | john@example.com | ✅ | 2023-01-01 12:00:00 |');
-    expect($result)->toContain('| 2 | **Jane Smith** | jane@example.com | ❌ | 2023-01-02 12:00:00 |');
-    expect($result)->toContain('## UAT Testing Guidelines');
+    expect($result)->toContain('| User ID | Name | Email | Email Verified | Roles | Created At |');
+    expect($result)->toContain('| 1 | **John Doe** | john@example.com | ✅ | admin, user | 2023-01-01 12:00:00 |');
+    expect($result)->toContain('| 2 | **Jane Smith** | jane@example.com | ❌ | user | 2023-01-02 12:00:00 |');
+    expect($result)->toContain('## User Roles Distribution');
 });
 
 it('generates available modules correctly', function () {
@@ -156,13 +158,12 @@ it('generates available modules correctly', function () {
     $result = $this->generator->generateAvailableModules($modules);
 
     expect($result)->toBeString();
-    expect($result)->toContain('# Available Modules');
-    expect($result)->toContain('## Modules Overview');
-    expect($result)->toContain('| Module | Routes Count | Has Prerequisites |');
-    expect($result)->toContain('| **Dashboard** | 1 | No |');
-    expect($result)->toContain('| **Users** | 1 | Yes |');
-    expect($result)->toContain('### Dashboard');
-    expect($result)->toContain('### Users');
+    expect($result)->toContain('# Available Modules Overview');
+    expect($result)->toContain('## Modules Summary');
+    expect($result)->toContain('| Module | Routes | File |');
+    expect($result)->toContain('| **Dashboard** | 1 | `05-module-Dashboard.md` |');
+    expect($result)->toContain('| **Users** | 1 | `06-module-Users.md` |');
+    expect($result)->toContain('## General UAT Testing Guidelines');
 });
 
 it('generates module test suite correctly', function () {
@@ -189,7 +190,7 @@ it('generates module test suite correctly', function () {
     $result = $this->generator->generateModuleTestSuite($module, 0);
 
     expect($result)->toBeString();
-    expect($result)->toContain('# Users Module - Test Suite');
+    expect($result)->toContain('# Users Module - UAT Test Suite');
     expect($result)->toContain('## Module Overview');
     expect($result)->toContain('## Test Scenarios');
     expect($result)->toContain('| **Module Name** | Users |');
@@ -205,8 +206,8 @@ it('handles empty users collection', function () {
     $result = $this->generator->generateUsers($users);
 
     expect($result)->toBeString();
-    expect($result)->toContain('# Available Users');
-    expect($result)->toContain('_No users found in the system_');
+    expect($result)->toContain('# Users');
+    expect($result)->toContain('> Total Users: 0');
 });
 
 it('handles empty modules array', function () {
@@ -215,8 +216,8 @@ it('handles empty modules array', function () {
     $result = $this->generator->generateAvailableModules($modules);
 
     expect($result)->toBeString();
-    expect($result)->toContain('# Available Modules');
-    expect($result)->toContain('_No modules found. This might indicate that no routes are properly configured._');
+    expect($result)->toContain('# Available Modules Overview');
+    expect($result)->toContain('> Total Modules: 0');
 });
 
 it('handles module with no routes', function () {
@@ -230,9 +231,7 @@ it('handles module with no routes', function () {
     $result = $this->generator->generateAvailableModules($modules);
 
     expect($result)->toBeString();
-    expect($result)->toContain('| **EmptyModule** | 0 | No |');
-    expect($result)->toContain('### EmptyModule');
-    expect($result)->toContain('_No routes available for this module_');
+    expect($result)->toContain('| **EmptyModule** | 0 | `05-module-EmptyModule.md` |');
 });
 
 it('handles route with no prerequisites', function () {
@@ -252,8 +251,8 @@ it('handles route with no prerequisites', function () {
     $result = $this->generator->generateModuleTestSuite($module, 0);
 
     expect($result)->toBeString();
-    expect($result)->toContain('### Route: / (dashboard)');
-    expect($result)->toContain('_No special prerequisites required for this route_');
+    expect($result)->toContain('### Route: `/`');
+    expect($result)->toContain('| `//` | dashboard | DashboardController@index |');
 });
 
 it('handles empty role permissions', function () {
