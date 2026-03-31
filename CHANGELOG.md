@@ -2,6 +2,24 @@
 
 All notable changes to `uat` will be documented in this file.
 
+## 1.1.0 - 2026-03-31
+
+### What's Changed
+
+#### Added
+
+- Laravel 13 support (illuminate constraints include `^13.0`)
+- PHPUnit 12 compatibility
+- Pest 4 support
+
+#### Changed
+
+- Updated `phpunit.xml.dist` for PHPUnit 12
+- Standardized CI workflow (Laravel 12 + PHP 8.4/8.3)
+- Updated dev dependencies (larastan, phpstan plugins, collision)
+
+**Full Changelog**: https://github.com/cleaniquecoders/uat-1/compare/1.0.0...1.1.0
+
 ## First Release - 2025-09-28
 
 ### 🎉 Release v1.0.0: User Acceptance Testing Documentation Generator
@@ -43,6 +61,7 @@ This powerful package automatically generates comprehensive UAT documentation by
 composer require cleaniquecoders/uat
 php artisan vendor:publish --tag="uat-config"
 php artisan uat:generate
+
 
 ```
 #### 🌟 Why This Matters
